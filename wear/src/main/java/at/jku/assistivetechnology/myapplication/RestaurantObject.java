@@ -1,8 +1,9 @@
 package at.jku.assistivetechnology.myapplication;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class RestaurantObject {
+public class RestaurantObject implements Serializable {
 
     public int getId() {
         return id;
