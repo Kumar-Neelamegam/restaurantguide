@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.coreModules;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +18,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,6 +35,13 @@ import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.networkCalls.NetworkCall;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantListAdapter;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
+import at.jku.assistivetechnology.myapplication.utilities.GpsLocator;
+import at.jku.assistivetechnology.myapplication.utilities.Utils;
 
 public class ListActivity extends WearableActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
 
@@ -46,13 +57,12 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     TextView errorTextView;
     AppCompatImageView imgvw_radius, imgvw_refresh;
     LinearLayout ll_progress;
+    SpinKitView spinKitView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
-        // Enables Always-on
         try {
             setAmbientEnabled();
             getInit();
@@ -105,8 +115,8 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
             public void run() {
                 try {
                     final Object response = httpsTask.get();
-                    Log.e("Response: ", response.toString());
-                    parseResponse((String) response);
+                    if(response!=null) {Log.e("Response: ", response.toString());
+                    parseResponse((String) response);}
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -154,14 +164,15 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
                 restaurantObject = new RestaurantObject();
                 restaurantObject.setId(j + 1);
                 restaurantObject.setRestaurantDistance(calculateDistance(pLat, pLong, restaurant_latitude, restaurant_longitude, "K") + " kms");
-
+                restaurantObject.setRestaurantLatitude(restaurant_latitude);
+                restaurantObject.setRestaurantLongitude(restaurant_longitude);
                 //Child Node List
+                HashMap<String, String> map=new HashMap<>();
                 NodeList nList = eElement.getElementsByTagName("tag");
                 for (int i1 = 0; i1 < nList.getLength(); i1++) {
                     nNode = nList.item(i1);
                     eElement = (Element) nNode;
                     //Log.e("Child Node:", "Key: "+eElement.getAttribute("k") + "Value: "+eElement.getAttribute("v"));
-                    HashMap<String, String> map = new HashMap<>();
                     map.put(eElement.getAttribute("k"), eElement.getAttribute("v"));//Put full child element inside the object
                     restaurantObject.setRestaurantFullData(map);
                     if (eElement.getAttribute("k").contains("name")) {
@@ -207,6 +218,9 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         imgvw_refresh.setOnClickListener(this);
         imgvw_radius.setOnClickListener(this);
         ll_progress=findViewById(R.id.ll_progress);
+        spinKitView=findViewById(R.id.progressBar1);
+        Sprite animate = new CubeGrid();
+        spinKitView.setIndeterminateDrawable(animate);
     }
 
     private void loadList() {
@@ -231,7 +245,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Options");
+        //builder.setTitle("Options");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
@@ -252,21 +266,15 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     }
 
     private void callMoreInfoActivity(int itemPosition) {
-        ArrayList<RestaurantObject> tempRestaurantObjects=new ArrayList<>();
-        tempRestaurantObjects.add(listofRestaurants.get(itemPosition));
-        Bundle extra = new Bundle();
-        extra.putSerializable("restaurantObjects", tempRestaurantObjects);
-        startActivity(new Intent(ListActivity.this, MoreInfoActivity.class).putExtra("extra",extra));
-        finish();
+        RestaurantObject tempRestaurantObjects=listofRestaurants.get(itemPosition);
+        startActivity(new Intent(ListActivity.this, MoreInfoActivity.class).putExtra("extra",tempRestaurantObjects));
+       // finish();
     }
 
     private void callCompassActivity(int itemPosition) {
-        ArrayList<RestaurantObject> tempRestaurantObjects=new ArrayList<>();
-        tempRestaurantObjects.add(listofRestaurants.get(itemPosition));
-        Bundle extra = new Bundle();
-        extra.putSerializable("restaurantObjects", tempRestaurantObjects);
-        startActivity(new Intent(ListActivity.this, CompassActivity.class).putExtra("extra",extra));
-        finish();
+        RestaurantObject tempRestaurantObjects=listofRestaurants.get(itemPosition);
+        startActivity(new Intent(ListActivity.this, CompassActivity.class).putExtra("extra",tempRestaurantObjects));
+        //finish();
     }
 
     @Override
@@ -281,6 +289,12 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
             gpsTracker.stopUsingGPS();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 
     @Override
     public void onClick(View v) {

@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.coreModules;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -8,10 +8,17 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Wave;
+
+import at.jku.assistivetechnology.myapplication.R;
+
 public class SplashActivity extends CoreActivity
 {
 
     private static final long SPLASH_DURATION = 3000;
+    SpinKitView spinKitView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,9 @@ public class SplashActivity extends CoreActivity
 
     private void getInit() {
 
+        spinKitView=findViewById(R.id.progressBar);
+        Sprite animate = new Wave();
+        spinKitView.setIndeterminateDrawable(animate);
         ImageView logo=findViewById(R.id.imageView);
         doBounceAnimation(logo);
 
