@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:background="@color/blue_a400"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:text="Restaurants"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_radius"
+            android:layout_width="15dp"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="8dp"
+            android:tint="@color/white"
+            android:layout_height="15dp"
+            app:srcCompat="@drawable/ic_radius" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_weight="1"
+            android:id="@+id/imgvw_refresh"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="8dp"
+            android:layout_width="15dp"
+            android:tint="@color/white"
+            android:layout_height="15dp"
+            app:srcCompat="@drawable/ic_refresh" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtvw_error_data"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/red_a200"
+        android:textColor="@color/white"
+        android:text="Oops.. No data found!" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_progress"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progressBar1"
+            style="@style/SpinKitView.Small.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/blue_a400" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+        <TextView
+            android:id="@+id/txtvw_infodata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+
+            android:background="@color/green"
+            android:textColor="@color/white"
+            android:text="Please wait..Loading.." />
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
