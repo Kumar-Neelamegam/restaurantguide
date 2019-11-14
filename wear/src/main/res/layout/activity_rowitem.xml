@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:textColor="@color/black"
-            android:text="Restaurant Name" />
+            android:text="" />
 
         <TextView
             android:id="@+id/txtvw_distance"
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/ash"
-            android:text="Distance" />
+            android:text="" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.objects;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import at.jku.assistivetechnology.myapplication.R;
+
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.ViewHolder> {
 
 
@@ -19,7 +21,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
 
     // data is passed into the constructor
-    RestaurantListAdapter(Context context, List<RestaurantObject> data) {
+    public RestaurantListAdapter(Context context, List<RestaurantObject> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -76,7 +78,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     }
 
     // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 

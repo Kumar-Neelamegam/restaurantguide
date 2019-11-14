@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.utilities;
 
 import android.Manifest;
 import android.app.Activity;

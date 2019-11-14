@@ -1,9 +1,9 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.objects;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class RestaurantObject implements Serializable {
+public class RestaurantObject implements Serializable  {
 
     public int getId() {
         return id;
@@ -21,19 +21,19 @@ public class RestaurantObject implements Serializable {
         this.restaurantName = restaurantName;
     }
 
-    public String getRestaurantLatitude() {
+    public Double getRestaurantLatitude() {
         return restaurantLatitude;
     }
 
-    public void setRestaurantLatitude(String restaurantLatitude) {
+    public void setRestaurantLatitude(Double restaurantLatitude) {
         this.restaurantLatitude = restaurantLatitude;
     }
 
-    public String getRestaurantLongitude() {
+    public Double getRestaurantLongitude() {
         return restaurantLongitude;
     }
 
-    public void setRestaurantLongitude(String restaurantLongitude) {
+    public void setRestaurantLongitude(Double restaurantLongitude) {
         this.restaurantLongitude = restaurantLongitude;
     }
 
@@ -47,8 +47,8 @@ public class RestaurantObject implements Serializable {
 
     int id;
     String restaurantName;
-    String restaurantLatitude;
-    String restaurantLongitude;
+    Double restaurantLatitude;
+    Double restaurantLongitude;
     HashMap<String, String> restaurantFullData;
 
     public String getRestaurantDistance() {

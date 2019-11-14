@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication;
+package at.jku.assistivetechnology.myapplication.networkCalls;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -13,13 +13,13 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-class NetworkCall extends AsyncTask {
+public class NetworkCall extends AsyncTask {
 
     private final int radius;
     private final double currentlongitude;
     private final double currentlatitude;
     String response = "";
-    String APIURL ="https://lz4.overpass-api.de/api/interpreter";
+    String APIURL ="https://z.overpass-api.de/api/interpreter";
 
 
     public NetworkCall(int radius, double longitude, double latitude) {
@@ -77,6 +77,7 @@ class NetworkCall extends AsyncTask {
         url = new URL(APIURL);
         HttpsURLConnection httpsCon = (HttpsURLConnection) url.openConnection();
         httpsCon.setDoOutput(true);
+        httpsCon.setConnectTimeout(1000);
         httpsCon.setRequestMethod("POST");
         OutputStreamWriter out = new OutputStreamWriter(httpsCon.getOutputStream());
         out.write(call);
