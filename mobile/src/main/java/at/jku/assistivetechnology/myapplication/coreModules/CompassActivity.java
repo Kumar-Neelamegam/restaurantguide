@@ -23,9 +23,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import java.util.Locale;
 
-import at.jku.assistivetechnology.domain.objects.RestaurantObject;
-import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
+import at.jku.assistivetechnology.myapplication.utilities.GpsLocator;
+
 
 public class CompassActivity extends WearableActivity implements SensorEventListener, View.OnClickListener, TextToSpeech.OnInitListener {
 
@@ -39,7 +40,6 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     GpsLocator gpsLocator;//=new GpsLocator();
     RestaurantObject objects;
     private TextToSpeech tts;
-    TextView distances;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         gpsLocator=new GpsLocator(this);
         compass=findViewById(R.id.imgvw_compass);
         arrow=findViewById(R.id.imgvw_arrow);
-        distances = findViewById(R.id.txtvw_distance);
+
 
         setInitialData();
 
@@ -83,18 +83,23 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
     }
 
+
     double restaurant_Latitude;
     double restaurant_Longitude;
     SensorManager mSensorManager;
     Sensor sensor;
     private float currentDegree = 0f;
     private float currentDegreeNeedle = 0f;
+    Location userLoc=new Location("service Provider");
+    double currentLong = 0;
+    double currentLat = 0;
+
 
     private void setSensorChanges() {
 
         mSensorManager =  (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -105,10 +110,9 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent event) {
 
-       // calculateBearingDistance(sensorEvent.values[0]);
-
+        calculateBearingDistance(event.values[0]);
     }
 
     private void calculateBearingDistance(float value) {
@@ -117,6 +121,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         double a2 = gpsLocator.getLongitude() / pk;
         double b1 = restaurant_Latitude / pk;
         double b2 = restaurant_Longitude / pk;
+
         double t1 = Math.cos(a1) * Math.cos(a2) * Math.cos(b1) * Math.cos(b2);
         double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
         double t3 = Math.sin(a1) * Math.sin(b1);
@@ -126,10 +131,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         double distancem=Math.round(distance1*100.0)/100.0;
 
         //distance=distance/1000;
-        // distmeters.setText("Distance in Meter:-"+String.valueOf(distance)+"M");
-
-        distances.setText("Distance: "+"("+String.valueOf(distancekm)+"KM"+")");
-
+        Log.e("Calculations: ", "Distance:-"+String.valueOf(distancem)+"M"+","+"("+String.valueOf(distancekm)+"KM"+")");
 
         if(distancekm<0.01){
 
@@ -140,18 +142,17 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         Location destinationLoc = new Location("service Provider");
         destinationLoc.setLatitude(restaurant_Latitude); //hotel latitude setting
         destinationLoc.setLongitude(restaurant_Longitude); //hotel longitude setting
-        bearTo=gpsLocator.getLocation().bearingTo(destinationLoc);//calculate bear
+        bearTo=userLoc.bearingTo(destinationLoc);//calculate bear
 
 
-        //bearin.setText("Bearing:"+String.valueOf(bearTo));
-        //headings.setText("Heading: " + String.valueOf(degree) + " degrees");
+       // Log.e("Bearing:::", "Bearing:"+String.valueOf(bearTo));
+       // Log.e("Heading:::", ("Heading: " + String.valueOf(degree) + " degrees"));
         //bearTo = The angle from true north to the destination location from the point we're your currently standing.
         //head = The angle that you've rotated your phone from true north.
 
-
-        GeomagneticField geoField = new GeomagneticField( Double.valueOf( gpsLocator.getLocation().getLatitude() ).floatValue(), Double
-                .valueOf( gpsLocator.getLocation().getLongitude() ).floatValue(),
-                Double.valueOf( gpsLocator.getLocation().getAltitude() ).floatValue(),
+        GeomagneticField geoField = new GeomagneticField( Double.valueOf( userLoc.getLatitude() ).floatValue(), Double
+                .valueOf( userLoc.getLongitude() ).floatValue(),
+                Double.valueOf( userLoc.getAltitude() ).floatValue(),
                 System.currentTimeMillis() );
         head -= geoField.getDeclination(); // converts magnetic north into true north
 
@@ -159,20 +160,21 @@ public class CompassActivity extends WearableActivity implements SensorEventList
             bearTo = bearTo + 360;
             //bearTo = -100 + 360  = 260;
         }
-//This is where we choose to point it
+        //This is where we choose to point it
         float direction = bearTo - head;
 
-// If the direction is smaller than 0, add 360 to get the rotation clockwise.
+        // If the direction is smaller than 0, add 360 to get the rotation clockwise.
         if (direction < 0) {
             direction = direction + 360;
         }
+
 
         Animation an = new RotateAnimation(currentDegreeNeedle,  direction,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
         currentDegreeNeedle = direction;
 
-        an.setDuration(500);
+        an.setDuration(100);
         an.setRepeatCount(0);
         an.setFillAfter(true);
         arrow.startAnimation(an);
@@ -184,7 +186,6 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         compass.startAnimation(ra);
         currentDegree=-degree;
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

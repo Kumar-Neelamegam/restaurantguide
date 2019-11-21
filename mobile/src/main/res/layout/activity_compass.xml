@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-
-<LinearLayout app:layout_box="all"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:background="@color/blue_a400"
@@ -16,9 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="3dp"
+        android:padding="15dp"
         android:gravity="center"
         android:text="Compass"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/white" />
 
     <TextView
@@ -27,12 +24,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="3dp"
-        android:textSize="1sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:gravity="center"
         android:textStyle="bold"
         android:text="-"
         android:textColor="@color/black" />
-
 
     <TextView
         android:id="@+id/txtvw_distance"
@@ -40,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="3dp"
-        android:textSize="1sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:gravity="center"
         android:textStyle="bold"
         android:text="-"
@@ -48,8 +44,10 @@
 
 
     <RelativeLayout
+        android:layout_margin="10dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="match_parent"
         android:scaleType="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
@@ -66,7 +64,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgvw_arrow"
             android:layout_width="wrap_content"
-            android:layout_height="45dp"
+            android:layout_height="145dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:scaleType="centerInside"
@@ -77,8 +75,8 @@
         android:layout_height="1dp"
         android:background="@color/blue_a400"
         />
-    <LinearLayout  android:fitsSystemWindows="true"
-        android:padding="5dp"
+    <LinearLayout
+        android:padding="15dp"
         android:background="@color/blue_a400"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,11 +86,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgvw_info"
-            android:layout_width="32dp"
-            android:layout_height="22dp"
-            android:fitsSystemWindows="true"
-            android:layout_gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
+            android:layout_gravity="right"
+            android:layout_weight="1"
             android:tint="@color/white"
             app:srcCompat="@drawable/ic_infoicon" />
 
@@ -104,12 +102,11 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:tint="@color/white"
             android:id="@+id/imgvw_audio"
+            android:layout_weight="1"
             android:layout_gravity="left"
-            android:fitsSystemWindows="true"
             android:layout_marginLeft="5dp"
-            android:layout_width="35dp"
-            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_volume" />
     </LinearLayout>
 </LinearLayout>
-</androidx.wear.widget.BoxInsetLayout>

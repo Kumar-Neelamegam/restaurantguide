@@ -16,8 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.wear.widget.WearableLinearLayoutManager;
-import androidx.wear.widget.WearableRecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
@@ -37,18 +36,19 @@ import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import at.jku.assistivetechnology.domain.networkCalls.NetworkCall;
-import at.jku.assistivetechnology.domain.objects.RestaurantObject;
-import at.jku.assistivetechnology.domain.utilities.GpsLocator;
-import at.jku.assistivetechnology.domain.utilities.Utils;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.networkCalls.NetworkCall;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantListAdapter;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
+import at.jku.assistivetechnology.myapplication.utilities.GpsLocator;
+import at.jku.assistivetechnology.myapplication.utilities.Utils;
 
 public class ListActivity extends WearableActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-    WearableRecyclerView recyclerView;
+    RecyclerView recyclerView;
     RestaurantListAdapter restaurantListAdapter;
     GpsLocator gpsTracker;
     int radiusOption = 3000;
@@ -82,10 +82,8 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         try {
             gpsTracker = new GpsLocator(ListActivity.this);
             if (gpsTracker.canGetLocation()) {
-                //pLat = 48.33;//gpsTracker.getLatitude();
-                pLat = gpsTracker.getLatitude();
-                //pLong = 14.31;//gpsTracker.getLongitude();
-                pLong = gpsTracker.getLongitude();
+                pLat = 48.33;//gpsTracker.getLatitude();
+                pLong = 14.31;//gpsTracker.getLongitude();
                 callAPI(pLat, pLong);
             } else {
                 gpsTracker.showSettingsAlert();
@@ -232,17 +230,10 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
 
     private void loadList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // To align the edge children (first and last) with the center of the screen
-        recyclerView.setEdgeItemsCenteringEnabled(true);
-        recyclerView.setLayoutManager(new WearableLinearLayoutManager(this));
-        recyclerView.setCircularScrollingGestureEnabled(true);
-        recyclerView.setBezelFraction(0.5f);
-        recyclerView.setScrollDegreesPerScreen(90);
         restaurantListAdapter = new RestaurantListAdapter(this, listofRestaurants);
         restaurantListAdapter.setClickListener(this);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(restaurantListAdapter);
-
     }
 
 
@@ -325,7 +316,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     private void callRadiusOptionMenu() {
 
         final CharSequence[] items = {
-                "1 Km", "2 Kms", "3 Kms", "4 Kms", "5 Kms"
+                "1 Km", "2 Kms", "3 Kms"
         };
 
        AlertDialog alert;
@@ -346,15 +337,6 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
 
                     case "3 Kms":
                         radiusOption = 3000;
-                        retrieveData();
-                        break;
-                    case "4 Kms":
-                        radiusOption = 4000;
-                        retrieveData();
-                        break;
-
-                    case "5 Kms":
-                        radiusOption = 5000;
                         retrieveData();
                         break;
                 }

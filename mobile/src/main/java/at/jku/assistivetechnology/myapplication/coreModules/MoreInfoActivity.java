@@ -11,8 +11,9 @@ import android.widget.TextView;
 import java.util.Iterator;
 import java.util.Map;
 
-import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
+
 public class MoreInfoActivity extends WearableActivity  {
 
     TextView txtvw_title;

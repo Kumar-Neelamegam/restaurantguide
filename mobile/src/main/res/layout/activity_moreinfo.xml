@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:layout_width="match_parent">
-
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,16 +12,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="3dp"
+            android:padding="15dp"
             android:gravity="center"
             android:text="More Info"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/txtvw_restauranttitle"
             android:paddingLeft="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:paddingTop="2dp"
-            android:textSize="8sp"
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_width="match_parent"
@@ -35,7 +31,7 @@
             android:text="-" />
 
 
-        <ScrollView  app:layout_box="all"
+        <ScrollView
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -48,4 +44,3 @@
 
         </ScrollView>
     </LinearLayout>
-</androidx.wear.widget.BoxInsetLayout>
