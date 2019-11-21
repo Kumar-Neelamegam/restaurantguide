@@ -5,7 +5,9 @@ import android.content.Context;
 
 import androidx.core.app.ActivityCompat;
 
+import at.jku.assistivetechnology.domain.utilities.RuntimePermissionsActivity;
 import at.jku.assistivetechnology.myapplication.R;
+
 public abstract  class CoreActivity extends RuntimePermissionsActivity implements  ActivityCompat.OnRequestPermissionsResultCallback{
     private Context context;
     private static final int REQUEST_PERMISSIONS = 20;

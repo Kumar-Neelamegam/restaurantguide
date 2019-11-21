@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-
-<LinearLayout   app:layout_box="all"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,17 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="3dp"
+        android:padding="15dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:gravity="center"
         android:text="Restaurants"
+        android:textStyle="bold"
         android:textColor="@color/white" />
 
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
     <LinearLayout
         android:background="@color/blue_a400"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="3dp"
+        android:padding="15dp"
         android:gravity="center"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal">
@@ -36,7 +35,7 @@
             android:layout_marginRight="5dp"
             android:tint="@color/white"
             android:layout_weight="1"
-            android:layout_height="20dp"
+            android:layout_height="50dp"
             app:srcCompat="@drawable/ic_radius" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -45,7 +44,7 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:tint="@color/white"
-            android:layout_height="20dp"
+            android:layout_height="50dp"
             app:srcCompat="@drawable/ic_refresh" />
 
 
@@ -75,7 +74,7 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/progressBar1"
-            style="@style/SpinKitView.Small.CubeGrid"
+            style="@style/SpinKitView.Large.CubeGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -89,9 +88,11 @@
             android:id="@+id/txtvw_infodata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="bottom"
             android:gravity="center"
-            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:background="@color/green"
             android:textColor="@color/white"
             android:text="Please wait\nLoading.." />
@@ -99,14 +100,10 @@
 
     </LinearLayout>
 
-    <androidx.wear.widget.WearableRecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
-        app:circularScrollingGestureEnabled="false"
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-    </androidx.wear.widget.WearableRecyclerView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
-
-</androidx.wear.widget.BoxInsetLayout>

@@ -5,19 +5,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.wear.widget.WearableLinearLayoutManager;
-import androidx.wear.widget.WearableRecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
@@ -43,15 +42,16 @@ import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.domain.utilities.Utils;
 import at.jku.assistivetechnology.myapplication.R;
 
-public class ListActivity extends WearableActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
+public class ListActivity extends AppCompatActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-    WearableRecyclerView recyclerView;
+
+    RecyclerView recyclerView;
     RestaurantListAdapter restaurantListAdapter;
     GpsLocator gpsTracker;
-    int radiusOption = 3000;
+    int radiusOption = 1000;
     double pLong = 0;
     double pLat = 0;
     TextView errorTextView;
@@ -64,7 +64,6 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         try {
-            setAmbientEnabled();
             getInit();
             retrieveData();
         } catch (Exception e) {
@@ -82,10 +81,8 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         try {
             gpsTracker = new GpsLocator(ListActivity.this);
             if (gpsTracker.canGetLocation()) {
-                //pLat = 48.33;//gpsTracker.getLatitude();
-                pLat = gpsTracker.getLatitude();
-                //pLong = 14.31;//gpsTracker.getLongitude();
-                pLong = gpsTracker.getLongitude();
+                pLat = gpsTracker.getLatitude();//48.33;
+                pLong = gpsTracker.getLongitude();//14.31;//
                 callAPI(pLat, pLong);
             } else {
                 gpsTracker.showSettingsAlert();
@@ -114,7 +111,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         }
     }
 
-    private void startServiceCall(NetworkCall httpsTask) {
+    private void startServiceCall(final NetworkCall httpsTask) {
 
         final Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
@@ -122,8 +119,10 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
             public void run() {
                 try {
                     final Object response = httpsTask.get();
-                    if(response!=null) {Log.e("Response: ", response.toString());
-                    parseResponse((String) response);}
+                    if (response != null) {
+                        Log.e("Response: ", response.toString());
+                        parseResponse((String) response);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -174,7 +173,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
                 restaurantObject.setRestaurantLatitude(restaurant_latitude);
                 restaurantObject.setRestaurantLongitude(restaurant_longitude);
                 //Child Node List
-                HashMap<String, String> map=new HashMap<>();
+                HashMap<String, String> map = new HashMap<>();
                 NodeList nList = eElement.getElementsByTagName("tag");
                 for (int i1 = 0; i1 < nList.getLength(); i1++) {
                     nNode = nList.item(i1);
@@ -224,35 +223,28 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         imgvw_refresh = findViewById(R.id.imgvw_refresh);
         imgvw_refresh.setOnClickListener(this);
         imgvw_radius.setOnClickListener(this);
-        ll_progress=findViewById(R.id.ll_progress);
-        spinKitView=findViewById(R.id.progressBar1);
+        ll_progress = findViewById(R.id.ll_progress);
+        spinKitView = findViewById(R.id.progressBar1);
         Sprite animate = new CubeGrid();
         spinKitView.setIndeterminateDrawable(animate);
     }
 
     private void loadList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // To align the edge children (first and last) with the center of the screen
-        recyclerView.setEdgeItemsCenteringEnabled(true);
-        recyclerView.setLayoutManager(new WearableLinearLayoutManager(this));
-        recyclerView.setCircularScrollingGestureEnabled(true);
-        recyclerView.setBezelFraction(0.5f);
-        recyclerView.setScrollDegreesPerScreen(90);
         restaurantListAdapter = new RestaurantListAdapter(this, listofRestaurants);
         restaurantListAdapter.setClickListener(this);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(restaurantListAdapter);
-
     }
 
 
     @Override
     public void onItemClick(View view, int position) {
-       // Toast.makeText(this, "You clicked " + restaurantListAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "You clicked " + restaurantListAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         callOptionDialog(position);
     }
 
-    private void callOptionDialog(int position) {
+    private void callOptionDialog(final int position) {
 
         final CharSequence[] items = {
                 "Show Compass", "More Info"
@@ -279,14 +271,14 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     }
 
     private void callMoreInfoActivity(int itemPosition) {
-        RestaurantObject tempRestaurantObjects=listofRestaurants.get(itemPosition);
-        startActivity(new Intent(ListActivity.this, MoreInfoActivity.class).putExtra("extra",tempRestaurantObjects));
-       // finish();
+        RestaurantObject tempRestaurantObjects = listofRestaurants.get(itemPosition);
+        startActivity(new Intent(ListActivity.this, MoreInfoActivity.class).putExtra("extra", tempRestaurantObjects));
+        // finish();
     }
 
     private void callCompassActivity(int itemPosition) {
-        RestaurantObject tempRestaurantObjects=listofRestaurants.get(itemPosition);
-        startActivity(new Intent(ListActivity.this, CompassActivity.class).putExtra("extra",tempRestaurantObjects));
+        RestaurantObject tempRestaurantObjects = listofRestaurants.get(itemPosition);
+        startActivity(new Intent(ListActivity.this, CompassActivity.class).putExtra("extra", tempRestaurantObjects));
         //finish();
     }
 
@@ -328,7 +320,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
                 "1 Km", "2 Kms", "3 Kms", "4 Kms", "5 Kms"
         };
 
-       AlertDialog alert;
+        AlertDialog alert;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //builder.setTitle("Choose your distance radius");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -348,6 +340,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
                         radiusOption = 3000;
                         retrieveData();
                         break;
+
                     case "4 Kms":
                         radiusOption = 4000;
                         retrieveData();

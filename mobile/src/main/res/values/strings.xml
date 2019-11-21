@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RestaurantGuide</string>
+    <string name="app_name_nl">Restaurant\nGuide</string>
+    <string name="runtime_permissions_txt">Please enable ALL permissions from app settings.</string>
+
+
 </resources>

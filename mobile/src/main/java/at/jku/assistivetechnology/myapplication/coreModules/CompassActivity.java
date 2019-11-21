@@ -9,7 +9,6 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -27,15 +27,17 @@ import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.myapplication.R;
 
-public class CompassActivity extends WearableActivity implements SensorEventListener, View.OnClickListener, TextToSpeech.OnInitListener {
+public class CompassActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, TextToSpeech.OnInitListener {
 
 
     TextView txtvw_moreinfo;
     AppCompatImageView imgvw_audio, imgvw_info;
     ImageView compass, arrow;
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
     GpsLocator gpsLocator;//=new GpsLocator();
     RestaurantObject objects;
     private TextToSpeech tts;
@@ -54,12 +56,12 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
     private void init() {
 
-        txtvw_moreinfo=findViewById(R.id.txtvw_moreinfo);
-        imgvw_audio=findViewById(R.id.imgvw_audio);
-        imgvw_info=findViewById(R.id.imgvw_info);
-        gpsLocator=new GpsLocator(this);
-        compass=findViewById(R.id.imgvw_compass);
-        arrow=findViewById(R.id.imgvw_arrow);
+        txtvw_moreinfo = findViewById(R.id.txtvw_moreinfo);
+        imgvw_audio = findViewById(R.id.imgvw_audio);
+        imgvw_info = findViewById(R.id.imgvw_info);
+        gpsLocator = new GpsLocator(this);
+        compass = findViewById(R.id.imgvw_compass);
+        arrow = findViewById(R.id.imgvw_arrow);
         distances = findViewById(R.id.txtvw_distance);
 
         setInitialData();
@@ -77,11 +79,12 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
         txtvw_moreinfo.setText(objects.getRestaurantName().toString());
 
-        restaurant_Latitude=objects.getRestaurantLatitude();
-        restaurant_Longitude=objects.getRestaurantLongitude();
+        restaurant_Latitude = objects.getRestaurantLatitude();
+        restaurant_Longitude = objects.getRestaurantLongitude();
 
 
     }
+
 
     double restaurant_Latitude;
     double restaurant_Longitude;
@@ -92,9 +95,9 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
     private void setSensorChanges() {
 
-        mSensorManager =  (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -112,7 +115,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     }
 
     private void calculateBearingDistance(float value) {
-        double pk = (180.d/Math.PI);
+        double pk = (180.d / Math.PI);
         double a1 = gpsLocator.getLatitude() / pk;
         double a2 = gpsLocator.getLongitude() / pk;
         double b1 = restaurant_Latitude / pk;
@@ -121,17 +124,17 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
         double t3 = Math.sin(a1) * Math.sin(b1);
         double tt = Math.acos(t1 + t2 + t3);
-        double distance1= 6450000 * tt;
-        double distancekm=Math.round(distance1)/1000.0;
-        double distancem=Math.round(distance1*100.0)/100.0;
+        double distance1 = 6450000 * tt;
+        double distancekm = Math.round(distance1) / 1000.0;
+        double distancem = Math.round(distance1 * 100.0) / 100.0;
 
         //distance=distance/1000;
         // distmeters.setText("Distance in Meter:-"+String.valueOf(distance)+"M");
 
-        distances.setText("Distance: "+"("+String.valueOf(distancekm)+"KM"+")");
+        distances.setText("Distance: " + "(" + String.valueOf(distancekm) + "KM" + ")");
 
 
-        if(distancekm<0.01){
+        if (distancekm < 0.01) {
 
         }
         float degree = Math.round(value);
@@ -140,7 +143,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         Location destinationLoc = new Location("service Provider");
         destinationLoc.setLatitude(restaurant_Latitude); //hotel latitude setting
         destinationLoc.setLongitude(restaurant_Longitude); //hotel longitude setting
-        bearTo=gpsLocator.getLocation().bearingTo(destinationLoc);//calculate bear
+        bearTo = gpsLocator.getLocation().bearingTo(destinationLoc);//calculate bear
 
 
         //bearin.setText("Bearing:"+String.valueOf(bearTo));
@@ -149,10 +152,10 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         //head = The angle that you've rotated your phone from true north.
 
 
-        GeomagneticField geoField = new GeomagneticField( Double.valueOf( gpsLocator.getLocation().getLatitude() ).floatValue(), Double
-                .valueOf( gpsLocator.getLocation().getLongitude() ).floatValue(),
-                Double.valueOf( gpsLocator.getLocation().getAltitude() ).floatValue(),
-                System.currentTimeMillis() );
+        GeomagneticField geoField = new GeomagneticField(Double.valueOf(gpsLocator.getLocation().getLatitude()).floatValue(), Double
+                .valueOf(gpsLocator.getLocation().getLongitude()).floatValue(),
+                Double.valueOf(gpsLocator.getLocation().getAltitude()).floatValue(),
+                System.currentTimeMillis());
         head -= geoField.getDeclination(); // converts magnetic north into true north
 
         if (bearTo < 0) {
@@ -167,7 +170,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
             direction = direction + 360;
         }
 
-        Animation an = new RotateAnimation(currentDegreeNeedle,  direction,
+        Animation an = new RotateAnimation(currentDegreeNeedle, direction,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
         currentDegreeNeedle = direction;
@@ -177,14 +180,13 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         an.setFillAfter(true);
         arrow.startAnimation(an);
 
-        RotateAnimation ra=new RotateAnimation(currentDegree,-degree,Animation.RELATIVE_TO_SELF,0.5f,
-                Animation.RELATIVE_TO_SELF,0.5f);
+        RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         ra.setDuration(120);
         ra.setFillAfter(true);
         compass.startAnimation(ra);
-        currentDegree=-degree;
+        currentDegree = -degree;
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -206,8 +208,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.imgvw_info:
                 callMoreInfoIntent();
                 break;
@@ -224,12 +225,11 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
     private void callMoreInfoIntent() {
 
-        startActivity(new Intent(CompassActivity.this, MoreInfoActivity.class).putExtra("extra",objects));
+        startActivity(new Intent(CompassActivity.this, MoreInfoActivity.class).putExtra("extra", objects));
 
     }
 
-    public void clearMemory()
-    {
+    public void clearMemory() {
         this.finish();
         gpsLocator.stopUsingGPS();
         mSensorManager.unregisterListener(this);
@@ -261,8 +261,8 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     }
 
     private void speakOut() {
-        CharSequence text =txtvw_moreinfo.getText().toString();
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null,"id1");
+        CharSequence text = txtvw_moreinfo.getText().toString();
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "id1");
 
     }
 
