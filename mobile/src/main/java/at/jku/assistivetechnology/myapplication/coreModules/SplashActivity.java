@@ -25,9 +25,6 @@ public class SplashActivity extends CoreActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Enables Always-on
-        setAmbientEnabled();
-
         try {
             isStoragePermissionGranted();
         } catch (Exception e) {

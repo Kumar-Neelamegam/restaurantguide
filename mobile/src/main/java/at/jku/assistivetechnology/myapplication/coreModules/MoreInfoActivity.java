@@ -2,19 +2,20 @@ package at.jku.assistivetechnology.myapplication.coreModules;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.wearable.activity.WearableActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Iterator;
 import java.util.Map;
 
+import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.myapplication.R;
-import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
 
-public class MoreInfoActivity extends WearableActivity  {
+public class MoreInfoActivity extends AppCompatActivity {
 
     TextView txtvw_title;
     LinearLayout linearLayout;

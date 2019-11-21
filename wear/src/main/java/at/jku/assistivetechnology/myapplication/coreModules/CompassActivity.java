@@ -107,7 +107,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-       // calculateBearingDistance(sensorEvent.values[0]);
+        calculateBearingDistance(sensorEvent.values[0]);
 
     }
 

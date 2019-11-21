@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.domain.objects;
+package at.jku.assistivetechnology.myapplication.coreModules;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import at.jku.assistivetechnology.domain.R;
-
+import at.jku.assistivetechnology.domain.objects.RestaurantObject;
+import at.jku.assistivetechnology.myapplication.R;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.ViewHolder> {
 
