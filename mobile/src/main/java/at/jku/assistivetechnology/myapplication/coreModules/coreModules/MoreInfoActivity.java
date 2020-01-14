@@ -1,6 +1,7 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.coreModules.utilities.SharedPrefUtils;
 
 public class MoreInfoActivity extends AppCompatActivity {
 
@@ -25,11 +27,29 @@ public class MoreInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_moreinfo);
         try {
+            setTheme();
             init();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void setTheme() {
+        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("More Information");
+        LinearLayout parent=findViewById(R.id.parent);
+        if (sharedPrefUtils.isDarkMode()) {
+            setTheme(R.style.AppTheme);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+        } else {
+            setTheme(R.style.AppTheme_Light);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
+        }
     }
 
     private void init() {

@@ -3,44 +3,33 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-        android:background="@color/blue_a400"
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="15dp"
-        android:gravity="center"
-        android:text="Compass"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/txtvw_moreinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textColor="@color/white"
         android:padding="3dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:gravity="center"
+
         android:textStyle="bold"
-        android:text="-"
-        android:textColor="@color/black" />
+        android:text="-"  />
 
     <TextView
         android:id="@+id/txtvw_distance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textColor="@color/white"
         android:padding="3dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:gravity="center"
         android:textStyle="bold"
-        android:text="-"
-        android:textColor="@color/black" />
+        android:text="-"  />
 
 
     <RelativeLayout
@@ -73,14 +62,14 @@
 
     <View android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/blue_a400"
+        android:background="?android:colorBackground"
         />
     <LinearLayout
         android:padding="15dp"
-        android:background="@color/blue_a400"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -95,15 +84,16 @@
             app:srcCompat="@drawable/ic_infoicon" />
 
         <View android:layout_width="1dp"
+            android:id="@+id/test"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="?android:colorBackground"
             />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:tint="@color/white"
             android:id="@+id/imgvw_audio"
             android:layout_weight="1"
             android:layout_gravity="left"
+            android:tint="@color/white"
             android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

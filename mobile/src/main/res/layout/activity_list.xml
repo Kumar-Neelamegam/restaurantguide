@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:background="@color/blue_a400"
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="15dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:gravity="center"
-        android:text="Restaurants"
-        android:textStyle="bold"
-        android:textColor="@color/white" />
 
     <View android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
     <LinearLayout
-        android:background="@color/blue_a400"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
@@ -29,12 +17,13 @@
         android:layout_gravity="center_vertical"
         android:orientation="horizontal">
 
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgvw_radius"
             android:layout_width="match_parent"
             android:layout_marginRight="5dp"
-            android:tint="@color/white"
             android:layout_weight="1"
+            android:tint="@color/white"
             android:layout_height="50dp"
             app:srcCompat="@drawable/ic_radius" />
 
@@ -42,13 +31,28 @@
             android:id="@+id/imgvw_refresh"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:layout_width="match_parent"
             android:tint="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             app:srcCompat="@drawable/ic_refresh" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_theme"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:tint="@color/white"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_invert_colors_black_24dp" />
+
 
     </LinearLayout>
+
+
+    <View
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
     <TextView
         android:id="@+id/txtvw_error_data"
@@ -79,7 +83,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_gravity="center"
-            app:SpinKit_Color="@color/blue_a400" />
+            app:SpinKit_Color="@color/white" />
 
         <Space
             android:layout_width="match_parent"

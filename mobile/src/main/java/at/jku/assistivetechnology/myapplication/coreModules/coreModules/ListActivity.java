@@ -1,8 +1,9 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -41,6 +42,7 @@ import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.domain.utilities.Utils;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.coreModules.utilities.SharedPrefUtils;
 
 public class ListActivity extends AppCompatActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
 
@@ -55,19 +57,39 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     double pLong = 0;
     double pLat = 0;
     TextView errorTextView;
-    AppCompatImageView imgvw_radius, imgvw_refresh;
+    AppCompatImageView imgvw_radius, imgvw_refresh, imgvw_theme;
     LinearLayout ll_progress;
     SpinKitView spinKitView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_list);
         try {
+            setTheme();
             getInit();
             retrieveData();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setTheme() {
+
+        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        getSupportActionBar().setTitle("Restaurants");
+
+        LinearLayout parent=findViewById(R.id.parent);
+        if (sharedPrefUtils.isDarkMode()) {
+            setTheme(R.style.AppTheme);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+        } else {
+            setTheme(R.style.AppTheme_Light);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
         }
     }
 
@@ -217,16 +239,20 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     }
 
     private void getInit() {
+
         recyclerView = findViewById(R.id.recyclerview);
         errorTextView = findViewById(R.id.txtvw_error_data);
         imgvw_radius = findViewById(R.id.imgvw_radius);
         imgvw_refresh = findViewById(R.id.imgvw_refresh);
+        imgvw_theme = findViewById(R.id.imgvw_theme);
         imgvw_refresh.setOnClickListener(this);
         imgvw_radius.setOnClickListener(this);
+        imgvw_theme.setOnClickListener(this);
         ll_progress = findViewById(R.id.ll_progress);
         spinKitView = findViewById(R.id.progressBar1);
         Sprite animate = new CubeGrid();
         spinKitView.setIndeterminateDrawable(animate);
+
     }
 
     private void loadList() {
@@ -311,7 +337,17 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
             case R.id.imgvw_refresh:
                 retrieveData();
                 break;
+
+            case R.id.imgvw_theme:
+                changeTheme();
+                break;
         }
+    }
+
+    private void changeTheme() {
+        SharedPrefUtils  sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        sharedPrefUtils.isDarkMode(!sharedPrefUtils.isDarkMode());
+        recreate();
     }
 
     private void callRadiusOptionMenu() {

@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
 import android.content.Context;
 import android.view.LayoutInflater;

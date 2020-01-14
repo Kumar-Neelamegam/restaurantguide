@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
 import android.Manifest;
 import android.content.Context;

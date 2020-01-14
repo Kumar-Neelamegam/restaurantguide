@@ -1,6 +1,10 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -8,29 +12,34 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.NotificationCompat;
 
 import java.util.Locale;
 
 import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.coreModules.utilities.SharedPrefUtils;
 
 public class CompassActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener, TextToSpeech.OnInitListener {
 
 
     TextView txtvw_moreinfo;
+    View test;
     AppCompatImageView imgvw_audio, imgvw_info;
     ImageView compass, arrow;
 
@@ -48,13 +57,33 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
         try {
+            setTheme();
             init();
+           // vibrateAlertUser();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void setTheme() {
+        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Compass");
+        LinearLayout parent=findViewById(R.id.parent);
+        if (sharedPrefUtils.isDarkMode()) {
+            setTheme(R.style.AppTheme);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.darkcommonaccent)));
+        } else {
+            setTheme(R.style.AppTheme_Light);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
+            parent.setBackground(new ColorDrawable(getResources().getColor(R.color.lightcommonaccent)));
+        }
+    }
+
     private void init() {
+
 
         txtvw_moreinfo = findViewById(R.id.txtvw_moreinfo);
         imgvw_audio = findViewById(R.id.imgvw_audio);
@@ -63,6 +92,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         compass = findViewById(R.id.imgvw_compass);
         arrow = findViewById(R.id.imgvw_arrow);
         distances = findViewById(R.id.txtvw_distance);
+        test=findViewById(R.id.test);
 
         setInitialData();
 
@@ -72,6 +102,13 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         imgvw_info.setOnClickListener(CompassActivity.this);
 
         tts = new TextToSpeech(this, this);//init text to speak
+
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vibrateAlertUser();
+            }
+        });
     }
 
     private void setInitialData() {
@@ -97,14 +134,13 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
         mSensorManager = (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     @Override
@@ -134,8 +170,8 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         distances.setText("Distance: " + "(" + String.valueOf(distancekm) + "KM" + ")");
 
 
-        if (distancekm < 0.01) {
-
+        if (distancekm < 0.10) {
+           vibrateAlertUser();
         }
         float degree = Math.round(value);
         float head = Math.round(value);
@@ -186,6 +222,34 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         ra.setFillAfter(true);
         compass.startAnimation(ra);
         currentDegree = -degree;
+    }
+
+    private void vibrateAlertUser() {
+        Toast.makeText(this, "You almost reached the restaurant..", Toast.LENGTH_SHORT).show();
+// Get instance of Vibrator from current Context
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+// Vibrate for 400 milliseconds
+        v.vibrate(400);
+
+        showNotification();
+    }
+
+    private void showNotification() {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_restaurant_item)
+                        .setContentTitle("Restaurant Guide")
+                        .setContentText("You reached your destination!");
+
+        Intent notificationIntent = new Intent(this, CompassActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
     }
 
     @Override

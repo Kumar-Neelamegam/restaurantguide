@@ -1,4 +1,4 @@
-package at.jku.assistivetechnology.myapplication.coreModules;
+package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Wave;
 
 import at.jku.assistivetechnology.myapplication.R;
+import at.jku.assistivetechnology.myapplication.coreModules.utilities.SharedPrefUtils;
 
 public class SplashActivity extends CoreActivity
 {
@@ -23,6 +24,9 @@ public class SplashActivity extends CoreActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        if (sharedPrefUtils.isDarkMode()) setTheme(R.style.AppTheme);
+        else setTheme(R.style.AppTheme_Light);
         setContentView(R.layout.activity_splash);
 
         try {
@@ -53,6 +57,7 @@ public class SplashActivity extends CoreActivity
 
     private void getInit() {
 
+        getSupportActionBar().hide();
         spinKitView=findViewById(R.id.progressBar);
         Sprite animate = new Wave();
         spinKitView.setIndeterminateDrawable(animate);

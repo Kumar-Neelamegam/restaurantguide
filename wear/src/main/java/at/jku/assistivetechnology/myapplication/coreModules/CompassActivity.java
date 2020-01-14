@@ -94,7 +94,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
         mSensorManager =  (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -107,7 +107,7 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        calculateBearingDistance(sensorEvent.values[0]);
+       calculateBearingDistance(sensorEvent.values[0]);
 
     }
 
