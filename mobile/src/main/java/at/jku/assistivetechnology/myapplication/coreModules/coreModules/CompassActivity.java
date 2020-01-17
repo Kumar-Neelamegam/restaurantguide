@@ -69,7 +69,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Compass");
+        getSupportActionBar().setTitle(getResources().getString(R.string.title_compass));
         LinearLayout parent=findViewById(R.id.parent);
         if (sharedPrefUtils.isDarkMode()) {
             setTheme(R.style.AppTheme);
@@ -114,7 +114,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     private void setInitialData() {
         objects = (RestaurantObject) getIntent().getSerializableExtra("extra");
 
-        txtvw_moreinfo.setText(objects.getRestaurantName().toString());
+        txtvw_moreinfo.setText(objects.getRestaurantName());
 
         restaurant_Latitude = objects.getRestaurantLatitude();
         restaurant_Longitude = objects.getRestaurantLongitude();
@@ -167,7 +167,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         //distance=distance/1000;
         // distmeters.setText("Distance in Meter:-"+String.valueOf(distance)+"M");
 
-        distances.setText("Distance: " + "(" + String.valueOf(distancekm) + "KM" + ")");
+        distances.setText(getResources().getString(R.string.distance) + "(" + distancekm + getResources().getString(R.string.km) + ")");
 
 
         if (distancekm < 0.10) {
@@ -225,12 +225,12 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     }
 
     private void vibrateAlertUser() {
-        Toast.makeText(this, "You almost reached the restaurant..", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.your_reached_restaurant, Toast.LENGTH_SHORT).show();
 // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 // Vibrate for 400 milliseconds
-        v.vibrate(400);
+        v.vibrate(200);
 
         showNotification();
     }
@@ -239,8 +239,8 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_restaurant_item)
-                        .setContentTitle("Restaurant Guide")
-                        .setContentText("You reached your destination!");
+                        .setContentTitle(getResources().getString(R.string.app_name))
+                        .setContentText(getResources().getString(R.string.you_reached_destination));
 
         Intent notificationIntent = new Intent(this, CompassActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,

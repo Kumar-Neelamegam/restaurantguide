@@ -79,7 +79,7 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     private void setTheme() {
 
         SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
-        getSupportActionBar().setTitle("Restaurants");
+        getSupportActionBar().setTitle(getResources().getString(R.string.title_listactivity));
 
         LinearLayout parent=findViewById(R.id.parent);
         if (sharedPrefUtils.isDarkMode()) {
@@ -126,9 +126,9 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
             ll_progress.setVisibility(View.VISIBLE);
             startServiceCall(httpsTask);
         } else {
-            Toast.makeText(ListActivity.this, "Network not connected!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ListActivity.this, getResources().getString(R.string.msg_nonetworkconnection), Toast.LENGTH_SHORT).show();
             errorTextView.setVisibility(View.VISIBLE);
-            errorTextView.setText("No network available!!");
+            errorTextView.setText(getResources().getString(R.string.no_network_connection));
             ll_progress.setVisibility(View.GONE);
         }
     }
@@ -155,7 +155,7 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
                         if (listofRestaurants.isEmpty()) {
                             ll_progress.setVisibility(View.GONE);
                             errorTextView.setVisibility(View.VISIBLE);
-                            Toast.makeText(ListActivity.this, "No data found..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ListActivity.this, getResources().getString(R.string.no_data_found), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         ll_progress.setVisibility(View.GONE);

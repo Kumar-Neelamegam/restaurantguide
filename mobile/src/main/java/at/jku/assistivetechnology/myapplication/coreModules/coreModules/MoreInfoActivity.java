@@ -39,7 +39,7 @@ public class MoreInfoActivity extends AppCompatActivity {
         SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("More Information");
+        getSupportActionBar().setTitle(getResources().getString(R.string.title_moreinformation));
         LinearLayout parent=findViewById(R.id.parent);
         if (sharedPrefUtils.isDarkMode()) {
             setTheme(R.style.AppTheme);

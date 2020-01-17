@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RestaurantGuide</string>
     <string name="app_name_nl">Restaurant\nGuide</string>
@@ -12,4 +13,5 @@
     <string name="you_reached_destination">You reached your destination!</string>
     <string name="distance">Distance:</string>
     <string name="km">KM</string>
+
 </resources>
