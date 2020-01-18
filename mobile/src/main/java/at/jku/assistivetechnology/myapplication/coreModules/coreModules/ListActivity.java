@@ -3,6 +3,7 @@ package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +32,10 @@ import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,7 +60,7 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     double pLong = 0;
     double pLat = 0;
     TextView errorTextView;
-    AppCompatImageView imgvw_radius, imgvw_refresh, imgvw_theme;
+    AppCompatImageView imgvw_radius, imgvw_refresh, imgvw_theme, imgvw_language;
     LinearLayout ll_progress;
     SpinKitView spinKitView;
 
@@ -218,9 +221,13 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     }
 
 
-    DecimalFormat df = new DecimalFormat(".##");
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        df.setDecimalFormatSymbols(dfs);
+
         if ((lat1 == lat2) && (lon1 == lon2)) {
             return 0;
         } else {
@@ -234,7 +241,9 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
             } else if (unit == "N") {
                 dist = dist * 0.8684;
             }
-            return Double.parseDouble((df.format(dist)));
+
+            return Double.parseDouble((df.format(dist)).trim());
+
         }
     }
 
@@ -245,9 +254,11 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
         imgvw_radius = findViewById(R.id.imgvw_radius);
         imgvw_refresh = findViewById(R.id.imgvw_refresh);
         imgvw_theme = findViewById(R.id.imgvw_theme);
+        imgvw_language = findViewById(R.id.imgvw_language);
         imgvw_refresh.setOnClickListener(this);
         imgvw_radius.setOnClickListener(this);
         imgvw_theme.setOnClickListener(this);
+        imgvw_language.setOnClickListener(this);
         ll_progress = findViewById(R.id.ll_progress);
         spinKitView = findViewById(R.id.progressBar1);
         Sprite animate = new CubeGrid();
@@ -341,7 +352,37 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
             case R.id.imgvw_theme:
                 changeTheme();
                 break;
+
+            case R.id.imgvw_language:
+                if (LocaleHelper.getLanguage(this).equals("en")) {
+                    changeLanguage("de");
+                    Toast.makeText(this, "Language updated to german..", Toast.LENGTH_SHORT).show();
+                } else {
+                    changeLanguage("en");
+                    Toast.makeText(this, "Language updated to english..", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
         }
+    }
+
+    private void changeLanguage(String lang) {
+
+        try {
+            //Change Application level locale
+            //LocaleHelper.setLocale(this, lang);
+            Locale locale = new Locale("de");
+            Locale.setDefault(locale);
+            Configuration config = getBaseContext().getResources().getConfiguration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+            //It is required to recreate the activity to reflect the change in UI.
+            recreate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void changeTheme() {

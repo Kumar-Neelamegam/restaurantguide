@@ -2,16 +2,16 @@
 <resources>
     <string name="app_name">RestaurantGuide</string>
     <string name="app_name_nl">Restaurant\nGuide</string>
-    <string name="runtime_permissions_txt">Please enable ALL permissions from app settings.</string>
+    <string name="runtime_permissions_txt">Bitte aktivieren Sie ALLE Berechtigungen aus den App-Einstellungen.</string>
     <string name="title_listactivity">Restaurants</string>
-    <string name="title_moreinformation">More Information</string>
-    <string name="msg_nonetworkconnection">Network not connected!!</string>
-    <string name="no_network_connection">No network available!!</string>
-    <string name="no_data_found">No data found..</string>
-    <string name="title_compass">Compass</string>
-    <string name="your_reached_restaurant">You almost reached the restaurant..</string>
-    <string name="you_reached_destination">You reached your destination!</string>
-    <string name="distance">Distance:</string>
+    <string name="title_moreinformation">Weitere Informationen</string>
+    <string name="msg_nonetworkconnection">Netzwerk nicht verbunden !!</string>
+    <string name="no_network_connection">Kein Netzwerk verfügbar !</string>
+    <string name="no_data_found">Keine Daten gefunden</string>
+    <string name="title_compass">Kompass</string>
+    <string name="your_reached_restaurant">Sie haben das Restaurant fast erreicht..</string>
+    <string name="you_reached_destination">Sie haben Ihr Ziel erreicht!</string>
+    <string name="distance">Entfernung:</string>
     <string name="km">KM</string>
 
 </resources>

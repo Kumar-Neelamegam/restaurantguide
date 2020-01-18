@@ -46,6 +46,14 @@
             app:srcCompat="@drawable/ic_invert_colors_black_24dp" />
 
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_language"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            app:srcCompat="@drawable/multilang" />
+
+
     </LinearLayout>
 
 

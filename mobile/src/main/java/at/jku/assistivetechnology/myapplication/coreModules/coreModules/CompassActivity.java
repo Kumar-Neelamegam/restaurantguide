@@ -310,6 +310,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         if (status == TextToSpeech.SUCCESS) {
 
             int result = tts.setLanguage(Locale.GERMAN);
+            tts.setEngineByPackageName("com.google.android.tts");
             tts.setPitch((float) 0.4);
             tts.setSpeechRate(1);
 
