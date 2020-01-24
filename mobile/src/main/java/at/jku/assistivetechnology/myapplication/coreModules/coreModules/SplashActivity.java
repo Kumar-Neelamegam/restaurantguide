@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Wave;
+import com.yariksoffice.lingver.Lingver;
 
 import at.jku.assistivetechnology.myapplication.R;
 import at.jku.assistivetechnology.myapplication.coreModules.utilities.SharedPrefUtils;
@@ -20,6 +21,7 @@ public class SplashActivity extends CoreActivity
 
     private static final long SPLASH_DURATION = 3000;
     SpinKitView spinKitView;
+    SharedPrefUtils sharedPrefUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,13 @@ public class SplashActivity extends CoreActivity
 
 
     private void getInit() {
+        Lingver.init(getApplication(), Common.defaultLanguage);
+
+        sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        if (!sharedPrefUtils.getLatestLanguage().equals("")) {
+            Lingver.getInstance().setLocale(this, sharedPrefUtils.getLatestLanguage());   //set the saved language
+            sharedPrefUtils.saveLatestLanguage(sharedPrefUtils.getLatestLanguage());
+        }
 
         getSupportActionBar().hide();
         spinKitView=findViewById(R.id.progressBar);

@@ -3,7 +3,6 @@ package at.jku.assistivetechnology.myapplication.coreModules.coreModules;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.yariksoffice.lingver.Lingver;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,7 +35,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,7 +62,7 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     AppCompatImageView imgvw_radius, imgvw_refresh, imgvw_theme, imgvw_language;
     LinearLayout ll_progress;
     SpinKitView spinKitView;
-
+    private SharedPrefUtils sharedPrefUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +79,7 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
     }
 
     private void setTheme() {
-
-        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        sharedPrefUtils = SharedPrefUtils.getInstance(this);
         getSupportActionBar().setTitle(getResources().getString(R.string.title_listactivity));
 
         LinearLayout parent=findViewById(R.id.parent);
@@ -283,22 +281,22 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
 
     private void callOptionDialog(final int position) {
 
+        String showcompass = getResources().getString(R.string.opt_showcompass);
+        String moreinfo = getResources().getString(R.string.opt_moreinfo);
         final CharSequence[] items = {
-                "Show Compass", "More Info"
+                showcompass, moreinfo
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
-                switch (items[item].toString()) {
-                    case "Show Compass":
-                        callCompassActivity(position);
-                        break;
 
-                    case "More Info":
-                        callMoreInfoActivity(position);
-                        break;
+                String s = items[item].toString();
+                if (showcompass.equals(s)) {
+                    callCompassActivity(position);
+                } else if (moreinfo.equals(s)) {
+                    callMoreInfoActivity(position);
                 }
 
             }
@@ -354,35 +352,18 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
                 break;
 
             case R.id.imgvw_language:
-                if (LocaleHelper.getLanguage(this).equals("en")) {
-                    changeLanguage("de");
-                    Toast.makeText(this, "Language updated to german..", Toast.LENGTH_SHORT).show();
+                if (Lingver.getInstance().getLanguage().equals(Common.defaultLanguage)) {//==en
+                    Lingver.getInstance().setLocale(this, Common.germanLanguage);
+                    Toast.makeText(this, getResources().getString(R.string.languageupdate), Toast.LENGTH_SHORT).show();
+                    sharedPrefUtils.saveLatestLanguage(Common.germanLanguage);
                 } else {
-                    changeLanguage("en");
+                    Lingver.getInstance().setLocale(this, Common.defaultLanguage);
+                    sharedPrefUtils.saveLatestLanguage(Common.defaultLanguage);
                     Toast.makeText(this, "Language updated to english..", Toast.LENGTH_SHORT).show();
                 }
-
+                recreate();
                 break;
         }
-    }
-
-    private void changeLanguage(String lang) {
-
-        try {
-            //Change Application level locale
-            //LocaleHelper.setLocale(this, lang);
-            Locale locale = new Locale("de");
-            Locale.setDefault(locale);
-            Configuration config = getBaseContext().getResources().getConfiguration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-            //It is required to recreate the activity to reflect the change in UI.
-            recreate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void changeTheme() {

@@ -36,4 +36,17 @@ public class SharedPrefUtils {
     public void clearAllPrefs() {
         preferences.edit().clear().apply();
     }
+
+
+    public void saveLatestLanguage(String lang) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("language", lang);
+        editor.apply();
+    }
+
+    public String getLatestLanguage() {
+        return preferences.getString("language", "");
+    }
+
+
 }

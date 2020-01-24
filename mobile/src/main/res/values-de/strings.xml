@@ -13,5 +13,8 @@
     <string name="you_reached_destination">Sie haben Ihr Ziel erreicht!</string>
     <string name="distance">Entfernung:</string>
     <string name="km">KM</string>
+    <string name="opt_showcompass">Kompass anzeigen</string>
+    <string name="opt_moreinfo">Mehr Info</string>
+    <string name="languageupdate">Sprache auf Deutsch aktualisiert</string>
 
 </resources>

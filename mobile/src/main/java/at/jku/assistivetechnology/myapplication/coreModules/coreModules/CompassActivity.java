@@ -28,7 +28,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.NotificationCompat;
 
-import java.util.Locale;
+import com.yariksoffice.lingver.Lingver;
 
 import at.jku.assistivetechnology.domain.objects.RestaurantObject;
 import at.jku.assistivetechnology.domain.utilities.GpsLocator;
@@ -140,6 +140,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onBackPressed() {
+        this.finish();
         super.onBackPressed();
     }
 
@@ -289,12 +290,13 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     private void callMoreInfoIntent() {
 
-        startActivity(new Intent(CompassActivity.this, MoreInfoActivity.class).putExtra("extra", objects));
-
+        Intent intent = new Intent(CompassActivity.this, MoreInfoActivity.class);
+        intent.putExtra("extra", objects);
+        intent.putExtra("flag", true);
+        startActivity(intent);
     }
 
     public void clearMemory() {
-        this.finish();
         gpsLocator.stopUsingGPS();
         mSensorManager.unregisterListener(this);
         // Don't forget to shutdown tts!
@@ -309,7 +311,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
 
-            int result = tts.setLanguage(Locale.GERMAN);
+            int result = tts.setLanguage(Lingver.getInstance().getLocale());
             tts.setEngineByPackageName("com.google.android.tts");
             tts.setPitch((float) 0.4);
             tts.setSpeechRate(1);

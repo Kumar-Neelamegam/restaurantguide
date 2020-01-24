@@ -12,4 +12,7 @@
     <string name="you_reached_destination">You reached your destination!</string>
     <string name="distance">Distance:</string>
     <string name="km">KM</string>
+    <string name="opt_showcompass">Show Compass</string>
+    <string name="opt_moreinfo">More Info</string>
+    <string name="languageupdate">Language updated to german</string>
 </resources>
