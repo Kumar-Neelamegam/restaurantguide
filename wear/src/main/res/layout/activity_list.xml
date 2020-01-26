@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+<LinearLayout   app:layout_box="all"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <TextView
+        android:background="@color/blue_a400"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="3dp"
+        android:gravity="center"
+        android:text="Restaurants"
+        android:textColor="@color/white" />
+
 
     <LinearLayout
         android:background="@color/blue_a400"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="3dp"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
         android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:gravity="left"
-            android:layout_weight="1"
-            android:text="Restaurants"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgvw_radius"
-            android:layout_width="15dp"
-            android:layout_weight="1"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="5dp"
             android:tint="@color/white"
-            android:layout_height="15dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
             app:srcCompat="@drawable/ic_radius" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_weight="1"
             android:id="@+id/imgvw_refresh"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="8dp"
-            android:layout_width="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:tint="@color/white"
-            android:layout_height="15dp"
+            android:layout_height="20dp"
             app:srcCompat="@drawable/ic_refresh" />
 
 
@@ -73,33 +78,35 @@
             style="@style/SpinKitView.Small.CubeGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:layout_gravity="center"
             app:SpinKit_Color="@color/blue_a400" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="70dp"/>
         <TextView
             android:id="@+id/txtvw_infodata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:gravity="center"
-
+            android:layout_weight="1"
             android:background="@color/green"
             android:textColor="@color/white"
-            android:text="Please wait..Loading.." />
+            android:text="Please wait\nLoading.." />
 
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.wear.widget.WearableRecyclerView
         android:id="@+id/recyclerview"
+        app:circularScrollingGestureEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </androidx.wear.widget.WearableRecyclerView>
 
 </LinearLayout>
+
+</androidx.wear.widget.BoxInsetLayout>

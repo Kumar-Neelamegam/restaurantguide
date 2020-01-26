@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_radius"
+            android:layout_width="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:tint="@color/white"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_radius" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_refresh"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:tint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_refresh" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_theme"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:tint="@color/white"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_invert_colors_black_24dp" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgvw_language"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            app:srcCompat="@drawable/multilang" />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <TextView
+        android:id="@+id/txtvw_error_data"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/red_a200"
+        android:textColor="@color/white"
+        android:text="Oops.. No data found!" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_progress"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progressBar1"
+            style="@style/SpinKitView.Large.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="70dp"/>
+        <TextView
+            android:id="@+id/txtvw_infodata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:background="@color/green"
+            android:textColor="@color/white"
+            android:text="Please wait\nLoading.." />
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

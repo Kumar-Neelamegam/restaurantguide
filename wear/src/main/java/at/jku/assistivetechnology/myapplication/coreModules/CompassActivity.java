@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,23 +23,23 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import java.util.Locale;
 
+import at.jku.assistivetechnology.domain.objects.RestaurantObject;
+import at.jku.assistivetechnology.domain.utilities.GpsLocator;
 import at.jku.assistivetechnology.myapplication.R;
-import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
-import at.jku.assistivetechnology.myapplication.utilities.GpsLocator;
-import edu.arbelkilani.compass.Compass;
 
 public class CompassActivity extends WearableActivity implements SensorEventListener, View.OnClickListener, TextToSpeech.OnInitListener {
 
 
     TextView txtvw_moreinfo;
     AppCompatImageView imgvw_audio, imgvw_info;
-    Compass compass;
+    ImageView compass, arrow;
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
     GpsLocator gpsLocator;//=new GpsLocator();
     RestaurantObject objects;
     private TextToSpeech tts;
+    TextView distances;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +57,10 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         txtvw_moreinfo=findViewById(R.id.txtvw_moreinfo);
         imgvw_audio=findViewById(R.id.imgvw_audio);
         imgvw_info=findViewById(R.id.imgvw_info);
-        compass=findViewById(R.id.compass);
         gpsLocator=new GpsLocator(this);
+        compass=findViewById(R.id.imgvw_compass);
+        arrow=findViewById(R.id.imgvw_arrow);
+        distances = findViewById(R.id.txtvw_distance);
 
         setInitialData();
 
@@ -76,8 +79,9 @@ public class CompassActivity extends WearableActivity implements SensorEventList
 
         restaurant_Latitude=objects.getRestaurantLatitude();
         restaurant_Longitude=objects.getRestaurantLongitude();
-    }
 
+
+    }
 
     double restaurant_Latitude;
     double restaurant_Longitude;
@@ -85,16 +89,12 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     Sensor sensor;
     private float currentDegree = 0f;
     private float currentDegreeNeedle = 0f;
-    Location userLoc=new Location("service Provider");
-    double currentLong = 0;
-    double currentLat = 0;
-
 
     private void setSensorChanges() {
 
         mSensorManager =  (SensorManager) getApplicationContext().getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -105,11 +105,10 @@ public class CompassActivity extends WearableActivity implements SensorEventList
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent sensorEvent) {
 
-        compass.onSensorChanged(event);
+       calculateBearingDistance(sensorEvent.values[0]);
 
-        calculateBearingDistance(event.values[0]);
     }
 
     private void calculateBearingDistance(float value) {
@@ -127,7 +126,10 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         double distancem=Math.round(distance1*100.0)/100.0;
 
         //distance=distance/1000;
-        Log.e("Calculations: ", "Distance:-"+String.valueOf(distancem)+"M"+","+"("+String.valueOf(distancekm)+"KM"+")");
+        // distmeters.setText("Distance in Meter:-"+String.valueOf(distance)+"M");
+
+        distances.setText("Distance: "+"("+String.valueOf(distancekm)+"KM"+")");
+
 
         if(distancekm<0.01){
 
@@ -138,17 +140,18 @@ public class CompassActivity extends WearableActivity implements SensorEventList
         Location destinationLoc = new Location("service Provider");
         destinationLoc.setLatitude(restaurant_Latitude); //hotel latitude setting
         destinationLoc.setLongitude(restaurant_Longitude); //hotel longitude setting
-        bearTo=userLoc.bearingTo(destinationLoc);//calculate bear
+        bearTo=gpsLocator.getLocation().bearingTo(destinationLoc);//calculate bear
 
 
-        Log.e("Bearing:::", "Bearing:"+String.valueOf(bearTo));
-        Log.e("Heading:::", ("Heading: " + String.valueOf(degree) + " degrees"));
+        //bearin.setText("Bearing:"+String.valueOf(bearTo));
+        //headings.setText("Heading: " + String.valueOf(degree) + " degrees");
         //bearTo = The angle from true north to the destination location from the point we're your currently standing.
         //head = The angle that you've rotated your phone from true north.
 
-        GeomagneticField geoField = new GeomagneticField( Double.valueOf( userLoc.getLatitude() ).floatValue(), Double
-                .valueOf( userLoc.getLongitude() ).floatValue(),
-                Double.valueOf( userLoc.getAltitude() ).floatValue(),
+
+        GeomagneticField geoField = new GeomagneticField( Double.valueOf( gpsLocator.getLocation().getLatitude() ).floatValue(), Double
+                .valueOf( gpsLocator.getLocation().getLongitude() ).floatValue(),
+                Double.valueOf( gpsLocator.getLocation().getAltitude() ).floatValue(),
                 System.currentTimeMillis() );
         head -= geoField.getDeclination(); // converts magnetic north into true north
 
@@ -156,23 +159,32 @@ public class CompassActivity extends WearableActivity implements SensorEventList
             bearTo = bearTo + 360;
             //bearTo = -100 + 360  = 260;
         }
-        //This is where we choose to point it
+//This is where we choose to point it
         float direction = bearTo - head;
 
-        // If the direction is smaller than 0, add 360 to get the rotation clockwise.
+// If the direction is smaller than 0, add 360 to get the rotation clockwise.
         if (direction < 0) {
             direction = direction + 360;
         }
 
+        Animation an = new RotateAnimation(currentDegreeNeedle,  direction,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        currentDegreeNeedle = direction;
+
+        an.setDuration(500);
+        an.setRepeatCount(0);
+        an.setFillAfter(true);
+        arrow.startAnimation(an);
 
         RotateAnimation ra=new RotateAnimation(currentDegree,-degree,Animation.RELATIVE_TO_SELF,0.5f,
                 Animation.RELATIVE_TO_SELF,0.5f);
         ra.setDuration(120);
         ra.setFillAfter(true);
         compass.startAnimation(ra);
-
         currentDegree=-degree;
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

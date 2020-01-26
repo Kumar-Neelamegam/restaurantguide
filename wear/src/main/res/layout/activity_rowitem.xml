@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:layout_width="match_parent">
+
+<LinearLayout app:layout_box="all"
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:padding="5dp"
+    android:gravity="left"
     android:background="@color/white"
     android:layout_height="wrap_content">
 
@@ -14,15 +21,15 @@
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:textColor="@color/white"
+        android:layout_marginRight="3dp"
         android:layout_gravity="top"
         android:layout_marginTop="2dp"
         android:layout_marginLeft="5dp"
         android:textSize="9sp"
         android:gravity="center"
-        android:text="1"/>
+        android:text=""/>
 
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -30,21 +37,26 @@
 
         <TextView
             android:id="@+id/txtvw_restaurantname"
-            android:paddingLeft="5dp"
             android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:gravity="left"
             android:layout_height="wrap_content"
             android:textSize="10sp"
+            android:layout_weight="1"
             android:textColor="@color/black"
-            android:text="" />
+            android:text="Title" />
 
         <TextView
             android:id="@+id/txtvw_distance"
-            android:paddingLeft="5dp"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:layout_weight="1"
             android:textSize="8sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/ash"
-            android:text="" />
+            android:text="Subtitle" />
     </LinearLayout>
 
 </LinearLayout>
+</androidx.wear.widget.BoxInsetLayout>

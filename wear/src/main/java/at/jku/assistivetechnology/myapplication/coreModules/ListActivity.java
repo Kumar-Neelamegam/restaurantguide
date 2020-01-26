@@ -16,7 +16,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.WearableLinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
@@ -36,22 +37,21 @@ import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import at.jku.assistivetechnology.domain.networkCalls.NetworkCall;
+import at.jku.assistivetechnology.domain.objects.RestaurantObject;
+import at.jku.assistivetechnology.domain.utilities.GpsLocator;
+import at.jku.assistivetechnology.domain.utilities.Utils;
 import at.jku.assistivetechnology.myapplication.R;
-import at.jku.assistivetechnology.myapplication.networkCalls.NetworkCall;
-import at.jku.assistivetechnology.myapplication.objects.RestaurantListAdapter;
-import at.jku.assistivetechnology.myapplication.objects.RestaurantObject;
-import at.jku.assistivetechnology.myapplication.utilities.GpsLocator;
-import at.jku.assistivetechnology.myapplication.utilities.Utils;
 
 public class ListActivity extends WearableActivity implements RestaurantListAdapter.ItemClickListener, View.OnClickListener {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-    RecyclerView recyclerView;
+    WearableRecyclerView recyclerView;
     RestaurantListAdapter restaurantListAdapter;
     GpsLocator gpsTracker;
-    int radiusOption = 1000;
+    int radiusOption = 3000;
     double pLong = 0;
     double pLat = 0;
     TextView errorTextView;
@@ -79,13 +79,19 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     }
 
     private void getLocation() {
-        gpsTracker = new GpsLocator(ListActivity.this);
-        if (gpsTracker.canGetLocation()) {
-            pLat = gpsTracker.getLatitude();
-            pLong = gpsTracker.getLongitude();
-            callAPI(pLat, pLong);
-        } else {
-            gpsTracker.showSettingsAlert();
+        try {
+            gpsTracker = new GpsLocator(ListActivity.this);
+            if (gpsTracker.canGetLocation()) {
+                //pLat = 48.33;//gpsTracker.getLatitude();
+                pLat = gpsTracker.getLatitude();
+                //pLong = 14.31;//gpsTracker.getLongitude();
+                pLong = gpsTracker.getLongitude();
+                callAPI(pLat, pLong);
+            } else {
+                gpsTracker.showSettingsAlert();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -104,6 +110,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
             Toast.makeText(ListActivity.this, "Network not connected!!", Toast.LENGTH_SHORT).show();
             errorTextView.setVisibility(View.VISIBLE);
             errorTextView.setText("No network available!!");
+            ll_progress.setVisibility(View.GONE);
         }
     }
 
@@ -144,7 +151,7 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
 
     public void parseResponse(String response) {
         RestaurantObject restaurantObject = new RestaurantObject();
-
+        listofRestaurants = new ArrayList<>();
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -225,10 +232,17 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
 
     private void loadList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // To align the edge children (first and last) with the center of the screen
+        recyclerView.setEdgeItemsCenteringEnabled(true);
+        recyclerView.setLayoutManager(new WearableLinearLayoutManager(this));
+        recyclerView.setCircularScrollingGestureEnabled(true);
+        recyclerView.setBezelFraction(0.5f);
+        recyclerView.setScrollDegreesPerScreen(90);
         restaurantListAdapter = new RestaurantListAdapter(this, listofRestaurants);
         restaurantListAdapter.setClickListener(this);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(restaurantListAdapter);
+
     }
 
 
@@ -245,7 +259,6 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //builder.setTitle("Options");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
@@ -312,11 +325,12 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
     private void callRadiusOptionMenu() {
 
         final CharSequence[] items = {
-                "1 Km", "2 Kms", "3 Kms"
+                "1 Km", "2 Kms", "3 Kms", "4 Kms", "5 Kms"
         };
 
+       AlertDialog alert;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose your distance radius");
+        //builder.setTitle("Choose your distance radius");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
@@ -334,11 +348,20 @@ public class ListActivity extends WearableActivity implements RestaurantListAdap
                         radiusOption = 3000;
                         retrieveData();
                         break;
+                    case "4 Kms":
+                        radiusOption = 4000;
+                        retrieveData();
+                        break;
+
+                    case "5 Kms":
+                        radiusOption = 5000;
+                        retrieveData();
+                        break;
                 }
 
             }
         });
-        AlertDialog alert = builder.create();
+        alert = builder.create();
         alert.show();
     }
 
