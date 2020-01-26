@@ -11,6 +11,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
@@ -151,6 +153,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
     }
 
+    boolean reacherflag = false;
     private void calculateBearingDistance(float value) {
         double pk = (180.d / Math.PI);
         double a1 = gpsLocator.getLatitude() / pk;
@@ -168,12 +171,12 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         //distance=distance/1000;
         // distmeters.setText("Distance in Meter:-"+String.valueOf(distance)+"M");
 
-        distances.setText(getResources().getString(R.string.distance) + "(" + distancekm + getResources().getString(R.string.km) + ")");
-
-
-        if (distancekm < 0.10) {
-           vibrateAlertUser();
+        if (String.valueOf(distancekm).contains("0.")) {
+            distances.setText(getResources().getString(R.string.distance) + "(" + distancem + getResources().getString(R.string.m) + ")");
+        } else {
+            distances.setText(getResources().getString(R.string.distance) + "(" + distancekm + getResources().getString(R.string.km) + ")");
         }
+
         float degree = Math.round(value);
         float head = Math.round(value);
         float bearTo;
@@ -223,6 +226,13 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         ra.setFillAfter(true);
         compass.startAnimation(ra);
         currentDegree = -degree;
+
+
+        if (distancekm < 0.10) {
+            if (!reacherflag)
+                vibrateAlertUser();
+        }
+
     }
 
     private void vibrateAlertUser() {
@@ -233,10 +243,12 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 // Vibrate for 400 milliseconds
         v.vibrate(200);
 
+
         showNotification();
     }
 
     private void showNotification() {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_restaurant_item)
@@ -247,10 +259,11 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
-
+        builder.setSound(alarmSound);
         // Add as notification
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(0, builder.build());
+        reacherflag = true;
     }
 
     @Override

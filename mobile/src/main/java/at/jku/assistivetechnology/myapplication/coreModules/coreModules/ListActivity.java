@@ -380,13 +380,14 @@ public class ListActivity extends AppCompatActivity implements RestaurantListAda
 
         AlertDialog alert;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //builder.setTitle("Choose your distance radius");
+        builder.setTitle("Choose your distance radius");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection
                 switch (items[item].toString()) {
                     case "1 Km":
                         radiusOption = 1000;
+                        retrieveData();
                         break;
 
                     case "2 Kms":
